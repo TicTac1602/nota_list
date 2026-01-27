@@ -11,6 +11,7 @@ export interface Task {
   client_name?: string
   file_number?: string
   due_date?: string
+  notes?: string
   created_at: string
   updated_at: string
   order_index: number

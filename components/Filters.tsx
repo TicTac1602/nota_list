@@ -35,6 +35,7 @@ export default function Filters({
   const [priority, setPriority] = useState<Priority>('medium')
   const [clientName, setClientName] = useState('')
   const [fileNumber, setFileNumber] = useState('')
+  const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,12 +49,14 @@ export default function Filters({
         priority,
         client_name: clientName || undefined,
         file_number: fileNumber || undefined,
+        notes: notes || undefined,
       })
       
       // Reset form
       setTitle('')
       setClientName('')
       setFileNumber('')
+      setNotes('')
       setPriority('medium')
       setIsOpen(false)
       
@@ -303,6 +306,20 @@ export default function Filters({
                 </button>
               ))}
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-900 mb-2">
+              Notes
+            </label>
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Notes ou commentaires..."
+              rows={4}
+              className="w-full px-3 py-2.5 text-base text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none resize-none"
+            />
           </div>
 
           <div className="flex gap-3 pt-2">

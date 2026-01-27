@@ -27,6 +27,7 @@ export async function createTask(formData: {
   client_name?: string
   file_number?: string
   due_date?: string
+  notes?: string
 }) {
   const supabase = await createClient()
   
@@ -53,6 +54,7 @@ export async function createTask(formData: {
       client_name: formData.client_name,
       file_number: formData.file_number,
       due_date: formData.due_date,
+      notes: formData.notes,
       order_index: maxOrderIndex + 1,
     })
     .select()

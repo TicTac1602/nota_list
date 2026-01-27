@@ -17,6 +17,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   const [status, setStatus] = useState(task.status)
   const [clientName, setClientName] = useState(task.client_name || '')
   const [fileNumber, setFileNumber] = useState(task.file_number || '')
+  const [notes, setNotes] = useState(task.notes || '')
   const [isDragging, setIsDragging] = useState(false)
 
   const priorityColors = {
@@ -54,6 +55,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
         status,
         client_name: clientName || undefined,
         file_number: fileNumber || undefined,
+        notes: notes || undefined,
       })
       setIsEditing(false)
       if (onTaskUpdated) {
@@ -128,6 +130,14 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
             className="px-3 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 outline-none"
           />
         </div>
+
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Notes..."
+          rows={3}
+          className="w-full px-3 py-2.5 mb-3 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none resize-none"
+        />
 
         <div className="flex gap-2 mb-3">
           {(['low', 'medium', 'high', 'urgent'] as Priority[]).map((p) => (
@@ -214,7 +224,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
             title="Éditer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 6 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
           </button>
           <button
@@ -228,6 +238,12 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
           </button>
         </div>
       </div>
+
+      {task.notes && (
+        <div className="mb-3 p-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-sm text-gray-700 whitespace-pre-wrap">{task.notes}</p>
+        </div>
+      )}
 
       <div className="relative">
         <button
