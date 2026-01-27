@@ -42,9 +42,8 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   }
 
   const statusLabels = {
-    todo: 'À faire',
     in_progress: 'En cours',
-    done: 'Terminée',
+    done: 'Formalités postérieures',
   }
 
   const handleSave = async () => {
@@ -188,7 +187,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className={`text-base font-medium text-gray-900 mb-2 leading-snug ${status === 'done' ? 'line-through text-gray-500' : ''}`}>
+          <h3 className={`text-base font-medium text-gray-900 mb-2 leading-snug`}>
             {task.title}
           </h3>
           
@@ -268,15 +267,6 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
               onClick={() => setShowMoveMenu(false)}
             />
             <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-              {status !== 'todo' && (
-                <button
-                  onClick={() => handleStatusChange('todo')}
-                  className="w-full text-left px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                  {statusLabels.todo}
-                </button>
-              )}
               {status !== 'in_progress' && (
                 <button
                   onClick={() => handleStatusChange('in_progress')}

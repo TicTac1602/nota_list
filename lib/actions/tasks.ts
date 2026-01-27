@@ -50,7 +50,7 @@ export async function createTask(formData: {
       title: formData.title,
       description: formData.description,
       priority: formData.priority,
-      status: formData.status || 'todo',
+      status: formData.status || 'in_progress',
       client_name: formData.client_name,
       notaire: formData.notaire,
       due_date: formData.due_date,

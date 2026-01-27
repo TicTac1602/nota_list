@@ -47,7 +47,7 @@ create table tasks (
   user_id uuid references auth.users not null,
   title text not null,
   description text,
-  status text not null check (status in ('todo', 'in_progress', 'done')),
+  status text not null check (status in ('in_progress', 'done')),
   priority text not null check (priority in ('low', 'medium', 'high', 'urgent')),
   client_name text,
   file_number text,
