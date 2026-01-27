@@ -8,11 +8,14 @@ import Modal from './Modal'
 interface FiltersProps {
   priorities: string[]
   clients: string[]
+  notaires: string[]
   selectedPriority: string
   selectedClient: string
+  selectedNotaire: string
   searchQuery: string
   onPriorityChange: (priority: string) => void
   onClientChange: (client: string) => void
+  onNotaireChange: (notaire: string) => void
   onSearchChange: (query: string) => void
   onReset: () => void
   onTaskAdded?: () => void
@@ -21,11 +24,14 @@ interface FiltersProps {
 export default function Filters({
   priorities,
   clients,
+  notaires,
   selectedPriority,
   selectedClient,
+  selectedNotaire,
   searchQuery,
   onPriorityChange,
   onClientChange,
+  onNotaireChange,
   onSearchChange,
   onReset,
   onTaskAdded,
@@ -34,7 +40,7 @@ export default function Filters({
   const [title, setTitle] = useState('')
   const [priority, setPriority] = useState<Priority>('medium')
   const [clientName, setClientName] = useState('')
-  const [fileNumber, setFileNumber] = useState('')
+  const [notaire, setNotaire] = useState('')
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -48,14 +54,14 @@ export default function Filters({
         title: title.trim(),
         priority,
         client_name: clientName || undefined,
-        file_number: fileNumber || undefined,
+        notaire: notaire || undefined,
         notes: notes || undefined,
       })
       
       // Reset form
       setTitle('')
       setClientName('')
-      setFileNumber('')
+      setNotaire('')
       setNotes('')
       setPriority('medium')
       setIsOpen(false)
@@ -70,7 +76,7 @@ export default function Filters({
       setLoading(false)
     }
   }
-  const hasActiveFilters = selectedPriority !== 'all' || selectedClient !== 'all' || searchQuery !== ''
+  const hasActiveFilters = selectedPriority !== 'all' || selectedClient !== 'all' || selectedNotaire !== 'all' || searchQuery !== ''
 
   const priorityLabels: Record<string, string> = {
     all: 'Toutes les priorités',
@@ -102,7 +108,7 @@ export default function Filters({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
         {/* Search */}
         <div>
           <label htmlFor="search" className="block text-xs font-medium text-gray-900 mb-1.5">
@@ -173,6 +179,26 @@ export default function Filters({
           </select>
         </div>
 
+        {/* Notaire Filter */}
+        <div>
+          <label htmlFor="notaire" className="block text-xs font-medium text-gray-900 mb-1.5">
+            Notaire
+          </label>
+          <select
+            id="notaire"
+            value={selectedNotaire}
+            onChange={(e) => onNotaireChange(e.target.value)}
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer"
+          >
+            <option value="all">Tous les notaires</option>
+            {notaires.map((notaire) => (
+              <option key={notaire} value={notaire}>
+                {notaire}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Reset Button */}
         <div className="flex items-end">
           {hasActiveFilters && (
@@ -210,6 +236,19 @@ export default function Filters({
               Client: {selectedClient}
               <button
                 onClick={() => onClientChange('all')}
+                className="hover:text-gray-600"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </span>
+          )}
+          {selectedNotaire !== 'all' && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 border border-gray-200 rounded text-xs font-medium text-gray-900">
+              Notaire: {selectedNotaire}
+              <button
+                onClick={() => onNotaireChange('all')}
                 className="hover:text-gray-600"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,15 +307,15 @@ export default function Filters({
               />
             </div>
             <div>
-              <label htmlFor="fileNumber" className="block text-sm font-medium text-gray-900 mb-2">
-                N° dossier
+              <label htmlFor="notaire" className="block text-sm font-medium text-gray-900 mb-2">
+                Notaire
               </label>
               <input
-                id="fileNumber"
+                id="notaire"
                 type="text"
-                value={fileNumber}
-                onChange={(e) => setFileNumber(e.target.value)}
-                placeholder="N° de dossier"
+                value={notaire}
+                onChange={(e) => setNotaire(e.target.value)}
+                placeholder="Nom du notaire"
                 className="w-full px-3 py-2.5 text-base text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 outline-none"
               />
             </div>

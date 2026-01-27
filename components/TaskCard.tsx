@@ -16,7 +16,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   const [priority, setPriority] = useState(task.priority)
   const [status, setStatus] = useState(task.status)
   const [clientName, setClientName] = useState(task.client_name || '')
-  const [fileNumber, setFileNumber] = useState(task.file_number || '')
+  const [notaire, setNotaire] = useState(task.notaire || '')
   const [notes, setNotes] = useState(task.notes || '')
   const [isDragging, setIsDragging] = useState(false)
 
@@ -54,7 +54,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
         priority,
         status,
         client_name: clientName || undefined,
-        file_number: fileNumber || undefined,
+        notaire: notaire || undefined,
         notes: notes || undefined,
       })
       setIsEditing(false)
@@ -124,9 +124,9 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
           />
           <input
             type="text"
-            value={fileNumber}
-            onChange={(e) => setFileNumber(e.target.value)}
-            placeholder="N° dossier"
+            value={notaire}
+            onChange={(e) => setNotaire(e.target.value)}
+            placeholder="Notaire"
             className="px-3 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 outline-none"
           />
         </div>
@@ -192,16 +192,16 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
             {task.title}
           </h3>
           
-          {(task.client_name || task.file_number) && (
+          {(task.client_name || task.notaire) && (
             <div className="flex flex-wrap gap-2 mb-3">
               {task.client_name && (
                 <span className="text-sm text-gray-600 bg-gray-50 px-2.5 py-1 rounded">
                   Client: {task.client_name}
                 </span>
               )}
-              {task.file_number && (
+              {task.notaire && (
                 <span className="text-sm text-gray-600 bg-gray-50 px-2.5 py-1 rounded">
-                  Dossier: {task.file_number}
+                  Notaire: {task.notaire}
                 </span>
               )}
             </div>

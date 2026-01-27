@@ -9,7 +9,7 @@ export interface Task {
   priority: Priority
   status: TaskStatus
   client_name?: string
-  file_number?: string
+  notaire?: string
   due_date?: string
   notes?: string
   created_at: string

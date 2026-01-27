@@ -13,6 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [selectedPriority, setSelectedPriority] = useState('all')
   const [selectedClient, setSelectedClient] = useState('all')
+  const [selectedNotaire, setSelectedNotaire] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [isDragOverTodo, setIsDragOverTodo] = useState(false)
   const [isDragOverInProgress, setIsDragOverInProgress] = useState(false)
@@ -62,14 +63,19 @@ export default function Home() {
       return false
     }
 
+    // Notaire filter
+    if (selectedNotaire !== 'all' && task.notaire !== selectedNotaire) {
+      return false
+    }
+
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       const matchesTitle = task.title.toLowerCase().includes(query)
       const matchesClient = task.client_name?.toLowerCase().includes(query)
-      const matchesFileNumber = task.file_number?.toLowerCase().includes(query)
+      const matchesNotaire = task.notaire?.toLowerCase().includes(query)
       
-      if (!matchesTitle && !matchesClient && !matchesFileNumber) {
+      if (!matchesTitle && !matchesClient && !matchesNotaire) {
         return false
       }
     }
@@ -82,15 +88,19 @@ export default function Home() {
   const inProgressTasks = filteredTasks.filter(t => t.status === 'in_progress')
   const doneTasks = filteredTasks.filter(t => t.status === 'done')
 
-  // Extract unique priorities and clients for filters
+  // Extract unique priorities, clients and notaires for filters
   const uniquePriorities = Array.from(new Set(tasks.map(t => t.priority)))
   const uniqueClients = Array.from(
     new Set(tasks.map(t => t.client_name).filter(Boolean))
+  ) as string[]
+  const uniqueNotaires = Array.from(
+    new Set(tasks.map(t => t.notaire).filter(Boolean))
   ) as string[]
 
   const handleResetFilters = () => {
     setSelectedPriority('all')
     setSelectedClient('all')
+    setSelectedNotaire('all')
     setSearchQuery('')
   }
 
@@ -171,11 +181,14 @@ export default function Home() {
           <Filters
             priorities={uniquePriorities}
             clients={uniqueClients}
+            notaires={uniqueNotaires}
             selectedPriority={selectedPriority}
             selectedClient={selectedClient}
+            selectedNotaire={selectedNotaire}
             searchQuery={searchQuery}
             onPriorityChange={setSelectedPriority}
             onClientChange={setSelectedClient}
+            onNotaireChange={setSelectedNotaire}
             onSearchChange={setSearchQuery}
             onReset={handleResetFilters}
             onTaskAdded={loadTasks}

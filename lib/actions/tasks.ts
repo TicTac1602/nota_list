@@ -25,7 +25,7 @@ export async function createTask(formData: {
   priority: Priority
   status?: TaskStatus
   client_name?: string
-  file_number?: string
+  notaire?: string
   due_date?: string
   notes?: string
 }) {
@@ -52,7 +52,7 @@ export async function createTask(formData: {
       priority: formData.priority,
       status: formData.status || 'todo',
       client_name: formData.client_name,
-      file_number: formData.file_number,
+      notaire: formData.notaire,
       due_date: formData.due_date,
       notes: formData.notes,
       order_index: maxOrderIndex + 1,
