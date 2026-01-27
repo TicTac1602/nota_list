@@ -1,16 +1,18 @@
 # NotaList 📋
 
-Application de gestion de tâches orientée notaires - "Todo list sous stéroïdes"
+Application de gestion de tâches orientée notaires avec interface Kanban moderne.
 
 ## 🎯 Fonctionnalités
 
-- ✅ **Ajout rapide de tâches** : Interface intuitive pour créer des tâches en un clic
+- ✅ **Ajout rapide de tâches** : Modal intuitive pour créer des tâches
 - 🎨 **Priorisation visuelle** : 4 niveaux de priorité (Basse, Moyenne, Haute, Urgent)
-- 📊 **Organisation par statut** : Colonnes À faire / En cours / Terminée
+- 📊 **Kanban Board** : Colonnes À faire / En cours / Terminée avec drag & drop
+- 🔍 **Filtres avancés** : Recherche par titre, filtres par priorité et client
 - 👤 **Métadonnées notariales** : Nom du client et numéro de dossier
-- 🔐 **Authentification sécurisée** : Via Supabase Auth
-- ⚡ **Interface rapide** : Next.js 15 avec App Router
-- 🎨 **Design personnel** : Interface moderne et conviviale
+- 🎯 **Déplacement flexible** : Drag & drop ou menu "Déplacer vers..."
+- 🔐 **Sécurité renforcée** : RLS Supabase, données isolées par utilisateur
+- ⚡ **Interface réactive** : Next.js 15 avec App Router et Server Actions
+- ♿ **Accessibilité** : Contraste WCAG AA/AAA
 
 ## 🚀 Tech Stack
 
@@ -36,125 +38,153 @@ npm install
 
 ### 3. Configuration Supabase
 
-Suivez les instructions dans [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) pour :
-- Créer un projet Supabase
-- Configurer la base de données
-- Obtenir vos clés API
+Créez un projet sur [supabase.com](https://supabase.com) et exécutez le SQL suivant :
+
+```sql
+-- Créer la table tasks
+create table tasks (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users not null,
+  title text not null,
+  description text,
+  status text not null check (status in ('todo', 'in_progress', 'done')),
+  priority text not null check (priority in ('low', 'medium', 'high', 'urgent')),
+  client_name text,
+  file_number text,
+  order_index integer not null default 0,
+  due_date timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Activer RLS
+alter table tasks enable row level security;
+
+-- Policies RLS
+create policy "Users can view their own tasks"
+  on tasks for select
+  using (auth.uid() = user_id);
+
+create policy "Users can create their own tasks"
+  on tasks for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own tasks"
+  on tasks for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own tasks"
+  on tasks for delete
+  using (auth.uid() = user_id);
+
+-- Index pour performance
+create index tasks_user_id_idx on tasks(user_id);
+create index tasks_status_idx on tasks(status);
+```
 
 ### 4. Variables d'environnement
 
-Créez un fichier `.env.local` :
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle_anon
+Copiez `.env.example` vers `.env.local` et remplissez vos valeurs :
+```bash
+cp .env.example .env.local
 ```
+
+Obtenez vos clés depuis Supabase Dashboard > Settings > API
 
 ### 5. Lancer le serveur de développement
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrez [http://localhost:3000](http://localhost:3000) pour voir l'application.
 
 ## 🗄️ Structure du projet
 
 ```
 nota_list/
 ├── app/
-│   ├── page.tsx              # Page principale (liste des tâches)
+│   ├── page.tsx              # Dashboard Kanban principal
 │   ├── login/page.tsx        # Page de connexion
 │   ├── signup/page.tsx       # Page d'inscription
 │   └── auth/callback/        # Callback OAuth
 ├── components/
-│   ├── QuickAddTask.tsx      # Composant d'ajout rapide
-│   └── TaskCard.tsx          # Carte de tâche
+│   ├── Filters.tsx           # Barre de filtres + ajout de tâche
+│   ├── TaskCard.tsx          # Carte de tâche avec drag & drop
+│   └── Modal.tsx             # Modal réutilisable
 ├── lib/
 │   ├── actions/
-│   │   └── tasks.ts          # Server Actions pour les tâches
+│   │   └── tasks.ts          # Server Actions CRUD
 │   ├── supabase/
 │   │   ├── client.ts         # Client Supabase (browser)
 │   │   ├── server.ts         # Client Supabase (server)
 │   │   └── middleware.ts     # Middleware auth
 │   └── types/
 │       └── database.ts       # Types TypeScript
-└── middleware.ts             # Middleware Next.js (auth)
+└── middleware.ts             # Middleware Next.js (protection routes)
 ```
 
 ## 🎨 Utilisation
 
-### Créer une tâche rapidement
-1. Tapez le titre dans la barre d'ajout
-2. Appuyez sur Entrée pour créer avec priorité moyenne
-3. Ou cliquez pour développer et ajouter plus de détails
+### Créer une tâche
+1. Cliquez sur le bouton "Nouvelle tâche"
+2. Remplissez le titre (obligatoire)
+3. Ajoutez optionnellement client, n° dossier
+4. Sélectionnez une priorité
+5. Créez !
+
+### Déplacer une tâche
+**Méthode 1 - Drag & Drop :**
+- Glissez la carte d'une colonne à l'autre
+- Un indicateur visuel apparaît sur la zone de drop
+
+**Méthode 2 - Menu "Déplacer" :**
+- Cliquez sur "Déplacer vers..."
+- Sélectionnez la colonne de destination
 
 ### Éditer une tâche
-1. Cliquez sur l'icône ✏️
+1. Cliquez sur l'icône ✏️ (visible au survol)
 2. Modifiez les champs
-3. Sauvegardez
+3. Sauvegardez ou annulez
 
-### Changer le statut
-- Utilisez le sélecteur de statut sur chaque carte
-- Les tâches se déplacent automatiquement entre les colonnes
-
-### Gérer les priorités
-- 🟢 **Basse** : Tâches non urgentes
-- ➡️ **Moyenne** : Tâches standard
-- ⚡ **Haute** : Priorité élevée
-- 🔥 **Urgent** : À traiter immédiatement
+### Filtrer les tâches
+- **Recherche** : Titre, client ou n° dossier
+- **Priorité** : Filtrer par niveau de priorité
+- **Client** : Filtrer par nom de client
+- **Réinitialiser** : Bouton pour effacer tous les filtres
 
 ## 🚢 Déploiement sur Vercel
 
 ### 1. Push sur GitHub
 ```bash
 git add .
-git commit -m "Initial commit"
+git commit -m "Ready for production"
 git push origin main
 ```
 
 ### 2. Déployer sur Vercel
-- Allez sur [vercel.com](https://vercel.com)
-- Importez votre repo GitHub
-- Ajoutez les variables d'environnement :
-  - `NEXT_PUBLIC_SUPABASE_URL`
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- Déployez !
+1. Importez le repo sur [vercel.com](https://vercel.com)
+2. Ajoutez les variables d'environnement :
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Déployez automatiquement
 
 ### 3. Configurer Supabase
-- Dans Supabase Dashboard > Authentication > URL Configuration
-- Ajoutez l'URL de production : `https://votre-app.vercel.app`
-- Ajoutez le callback : `https://votre-app.vercel.app/auth/callback`
+Dans Supabase Dashboard > Authentication > URL Configuration :
+- **Site URL** : `https://votre-app.vercel.app`
+- **Redirect URLs** : `https://votre-app.vercel.app/auth/callback`
 
 ## 🔐 Sécurité
 
-- Row Level Security (RLS) activé sur toutes les tables
-- Les utilisateurs ne voient que leurs propres tâches
-- Authentication via tokens JWT sécurisés
-- Variables sensibles dans `.env.local` (non versionné)
+- ✅ Row Level Security (RLS) activé
+- ✅ Isolation des données par utilisateur
+- ✅ Tokens JWT sécurisés
+- ✅ Variables sensibles non versionnées
+- ✅ Validation côté serveur avec Server Actions
 
-## 📈 Améliorations futures
+## 📝 License
 
-- [ ] Drag & drop pour réorganiser les tâches
-- [ ] Filtres par client/dossier
-- [ ] Dates d'échéance avec rappels
-- [ ] Recherche full-text
-- [ ] Export PDF/CSV
-- [ ] Thème sombre
-- [ ] Application mobile
-- [ ] Notifications push
-- [ ] Récurrence de tâches
-- [ ] Pièces jointes
+MIT
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Développé avec ❤️ pour optimiser la gestion de tâches notariales
