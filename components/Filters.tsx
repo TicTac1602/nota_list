@@ -9,13 +9,16 @@ interface FiltersProps {
   priorities: string[]
   clients: string[]
   notaires: string[]
+  types: string[]
   selectedPriority: string
   selectedClient: string
   selectedNotaire: string
+  selectedType: string
   searchQuery: string
   onPriorityChange: (priority: string) => void
   onClientChange: (client: string) => void
   onNotaireChange: (notaire: string) => void
+  onTypeChange: (type: string) => void
   onSearchChange: (query: string) => void
   onReset: () => void
   onTaskAdded?: () => void
@@ -25,43 +28,45 @@ export default function Filters({
   priorities,
   clients,
   notaires,
+  types,
   selectedPriority,
   selectedClient,
   selectedNotaire,
+  selectedType,
   searchQuery,
   onPriorityChange,
   onClientChange,
   onNotaireChange,
+  onTypeChange,
   onSearchChange,
   onReset,
   onTaskAdded,
 }: FiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [title, setTitle] = useState('')
   const [priority, setPriority] = useState<Priority>('medium')
   const [clientName, setClientName] = useState('')
   const [notaire, setNotaire] = useState('')
+  const [type, setType] = useState('')
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title.trim()) return
 
     setLoading(true)
     try {
       await createTask({
-        title: title.trim(),
         priority,
         client_name: clientName || undefined,
         notaire: notaire || undefined,
         notes: notes || undefined,
+        type: type || undefined,
       })
       
       // Reset form
-      setTitle('')
       setClientName('')
       setNotaire('')
+	  setType('')
       setNotes('')
       setPriority('medium')
       setIsOpen(false)
@@ -76,7 +81,7 @@ export default function Filters({
       setLoading(false)
     }
   }
-  const hasActiveFilters = selectedPriority !== 'all' || selectedClient !== 'all' || selectedNotaire !== 'all' || searchQuery !== ''
+  const hasActiveFilters = selectedPriority !== 'all' || selectedClient !== 'all' || selectedNotaire !== 'all' || selectedType !== 'all' || searchQuery !== ''
 
   const priorityLabels: Record<string, string> = {
     all: 'Toutes les priorités',
@@ -139,21 +144,21 @@ export default function Filters({
           </div>
         </div>
 
-        {/* Priority Filter */}
+		{/* Type Filter */}
         <div>
-          <label htmlFor="priority" className="block text-xs font-medium text-gray-900 mb-1.5">
-            Priorité
+          <label htmlFor="type" className="block text-xs font-medium text-gray-900 mb-1.5">
+            Type
           </label>
           <select
-            id="priority"
-            value={selectedPriority}
-            onChange={(e) => onPriorityChange(e.target.value)}
+            id="type"
+            value={selectedType}
+            onChange={(e) => onTypeChange(e.target.value)}
             className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer"
           >
-            <option value="all">{priorityLabels.all}</option>
-            {priorities.map((priority) => (
-              <option key={priority} value={priority}>
-                {priorityLabels[priority] || priority}
+            <option value="all">Tous les types</option>
+            {types.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </select>
@@ -174,6 +179,26 @@ export default function Filters({
             {clients.map((client) => (
               <option key={client} value={client}>
                 {client}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Priority Filter */}
+        <div>
+          <label htmlFor="priority" className="block text-xs font-medium text-gray-900 mb-1.5">
+            Priorité
+          </label>
+          <select
+            id="priority"
+            value={selectedPriority}
+            onChange={(e) => onPriorityChange(e.target.value)}
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer"
+          >
+            <option value="all">{priorityLabels.all}</option>
+            {priorities.map((priority) => (
+              <option key={priority} value={priority}>
+                {priorityLabels[priority] || priority}
               </option>
             ))}
           </select>
@@ -277,19 +302,25 @@ export default function Filters({
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Créer une tâche">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-900 mb-2">
-              Titre *
+	  		<label htmlFor="type" className="block text-sm font-medium text-gray-900 mb-2">
+              Type
             </label>
-            <input
-              id="title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Titre de la tâche"
+			<select
+				id="type"
+				value={type}
+				onChange={(e) => setType(e.target.value)}
               className="w-full px-3 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
-              required
-              autoFocus
-            />
+			>
+				<option value="">Sélectionner un type</option>
+				{types.map((t) => (
+					<option key={t} value={t}>
+						{t}
+					</option>
+				))}
+			</select>
+			</div>
+		  <div>
+
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -364,7 +395,7 @@ export default function Filters({
           <div className="flex gap-3 pt-2">
             <button
               type="submit"
-              disabled={loading || !title.trim()}
+              disabled={loading}
               className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Création...' : 'Créer'}

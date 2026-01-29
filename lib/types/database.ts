@@ -4,8 +4,7 @@ export type TaskStatus = 'in_progress' | 'done'
 export interface Task {
   id: string
   user_id: string
-  title: string
-  description?: string
+  type?: string
   priority: Priority
   status: TaskStatus
   client_name?: string

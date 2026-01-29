@@ -14,6 +14,7 @@ export default function Home() {
 	const [selectedPriority, setSelectedPriority] = useState('all')
 	const [selectedClient, setSelectedClient] = useState('all')
 	const [selectedNotaire, setSelectedNotaire] = useState('all')
+	const [selectedType, setSelectedType] = useState('all')
 	const [searchQuery, setSearchQuery] = useState('')
 	const [isDragOverInProgress, setIsDragOverInProgress] = useState(false)
 	const [isDragOverDone, setIsDragOverDone] = useState(false)
@@ -70,11 +71,10 @@ export default function Home() {
 		// Search filter
 		if (searchQuery) {
 			const query = searchQuery.toLowerCase()
-			const matchesTitle = task.title.toLowerCase().includes(query)
+			const matchesType = task.type?.toLowerCase().includes(query)
 			const matchesClient = task.client_name?.toLowerCase().includes(query)
-			const matchesNotaire = task.notaire?.toLowerCase().includes(query)
 
-			if (!matchesTitle && !matchesClient && !matchesNotaire) {
+			if (!matchesType && !matchesClient) {
 				return false
 			}
 		}
@@ -95,10 +95,13 @@ export default function Home() {
 		new Set(tasks.map(t => t.notaire).filter(Boolean))
 	) as string[]
 
+	const uniqueTypes = ['Vente', 'Notoriété Acquisitive', 'Succession', 'Divorce', 'Donation', 'Prêt', 'Authentification de signature', 'Autre']
+
 	const handleResetFilters = () => {
 		setSelectedPriority('all')
 		setSelectedClient('all')
 		setSelectedNotaire('all')
+		setSelectedType('all')
 		setSearchQuery('')
 	}
 
@@ -155,9 +158,9 @@ export default function Home() {
 		<div className="min-h-screen bg-gray-50 flex flex-col">
 			{/* Sticky Header & Filters */}
 			<div className="sticky top-0 z-10 bg-gray-50">
-				<div className="max-w-7xl mx-auto px-6 py-6">
+				<div className="max-w-7xl mx-auto p-6">
 					{/* Header */}
-					<div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
+					<div className="flex items-center justify-between mb-6 border-b border-gray-200">
 						<div>
 							<h1 className="text-3xl font-bold text-gray-900">NotaList</h1>
 							<p className="text-sm text-gray-600 mt-1">Gestion de tâches</p>
@@ -174,18 +177,21 @@ export default function Home() {
 					</div>
 
 					{/* Action Bar */}
-					<div className="flex flex-col md:flex-row items-stretch md:items-end gap-3 bg-white p-4 rounded-lg border border-gray-200">
+					<div className="flex flex-col md:flex-row items-stretch md:items-end gap-3 bg-white rounded-lg border border-gray-200">
 						<Filters
 							priorities={uniquePriorities}
 							clients={uniqueClients}
 							notaires={uniqueNotaires}
+							types={uniqueTypes}
 							selectedPriority={selectedPriority}
 							selectedClient={selectedClient}
 							selectedNotaire={selectedNotaire}
+							selectedType={selectedType}
 							searchQuery={searchQuery}
 							onPriorityChange={setSelectedPriority}
 							onClientChange={setSelectedClient}
 							onNotaireChange={setSelectedNotaire}
+							onTypeChange={setSelectedType}
 							onSearchChange={setSearchQuery}
 							onReset={handleResetFilters}
 							onTaskAdded={loadTasks}
@@ -202,7 +208,7 @@ export default function Home() {
 						<div className="flex flex-col">
 							<div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
 								<h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">En cours</h2>
-								<span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">{inProgressTasks.length}</span>
+								<span className="text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-600 px-2 py-1 rounded-md">{inProgressTasks.length}</span>
 							</div>
 							<div
 								className={`flex-1 space-y-3 min-h-50 p-2 rounded-lg transition ${isDragOverInProgress ? 'bg-indigo-50 border-2 border-dashed border-indigo-400' : ''
@@ -225,7 +231,7 @@ export default function Home() {
 						<div className="flex flex-col">
 							<div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
 								<h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Formalités Postérieures</h2>
-								<span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{doneTasks.length}</span>
+								<span className="text-xs font-medium text-green-600 bg-green-50 border border-green-600 px-2 py-1 rounded-md">{doneTasks.length}</span>
 							</div>
 							<div
 								className={`flex-1 space-y-3 min-h-50 p-2 rounded-lg transition ${isDragOverDone ? 'bg-green-50 border-2 border-dashed border-green-400' : ''

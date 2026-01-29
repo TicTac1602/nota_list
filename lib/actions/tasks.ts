@@ -20,14 +20,13 @@ export async function getTasks() {
 }
 
 export async function createTask(formData: {
-  title: string
-  description?: string
   priority: Priority
   status?: TaskStatus
   client_name?: string
   notaire?: string
   due_date?: string
   notes?: string
+  type?: string
 }) {
   const supabase = await createClient()
   
@@ -47,14 +46,13 @@ export async function createTask(formData: {
     .from('tasks')
     .insert({
       user_id: user.id,
-      title: formData.title,
-      description: formData.description,
       priority: formData.priority,
       status: formData.status || 'in_progress',
       client_name: formData.client_name,
       notaire: formData.notaire,
       due_date: formData.due_date,
       notes: formData.notes,
+      type: formData.type,
       order_index: maxOrderIndex + 1,
     })
     .select()

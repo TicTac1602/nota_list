@@ -12,11 +12,11 @@ interface TaskCardProps {
 export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [showMoveMenu, setShowMoveMenu] = useState(false)
-  const [title, setTitle] = useState(task.title)
   const [priority, setPriority] = useState(task.priority)
   const [status, setStatus] = useState(task.status)
   const [clientName, setClientName] = useState(task.client_name || '')
   const [notaire, setNotaire] = useState(task.notaire || '')
+  const [type, setType] = useState(task.type || '')
   const [notes, setNotes] = useState(task.notes || '')
   const [isDragging, setIsDragging] = useState(false)
 
@@ -49,11 +49,11 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   const handleSave = async () => {
     try {
       await updateTask(task.id, {
-        title,
         priority,
         status,
         client_name: clientName || undefined,
         notaire: notaire || undefined,
+        type: type || undefined,
         notes: notes || undefined,
       })
       setIsEditing(false)
@@ -105,14 +105,6 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   if (isEditing) {
     return (
       <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2.5 mb-3 text-base border border-gray-300 rounded-lg text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
-          autoFocus
-        />
-        
         <div className="grid grid-cols-2 gap-2 mb-3">
           <input
             type="text"
@@ -129,6 +121,23 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
             className="px-3 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 outline-none"
           />
         </div>
+		<div>
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full mb-3 px-3 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 outline-none"
+          >
+            <option value="">Sélectionner un type</option>
+            <option value="Vente">Vente</option>
+            <option value="Notoriété Acquisitive">Notoriété Acquisitive</option>
+            <option value="Succession">Succession</option>
+            <option value="Divorce">Divorce</option>
+            <option value="Donation">Donation</option>
+            <option value="Prêt">Prêt</option>
+            <option value="Authentification de signature">Authentification de signature</option>
+            <option value="Autre">Autre</option>
+          </select>
+		</div>
 
         <textarea
           value={notes}
@@ -188,16 +197,11 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
           <h3 className={`text-base font-medium text-gray-900 mb-2 leading-snug`}>
-            {task.title}
+            {task.type && task.client_name ? `[${task.type}] - ${task.client_name}` : ''}
           </h3>
           
-          {(task.client_name || task.notaire) && (
+          {(task.notaire) && (
             <div className="flex flex-wrap gap-2 mb-3">
-              {task.client_name && (
-                <span className="text-sm text-gray-600 bg-gray-50 px-2.5 py-1 rounded">
-                  Client: {task.client_name}
-                </span>
-              )}
               {task.notaire && (
                 <span className="text-sm text-gray-600 bg-gray-50 px-2.5 py-1 rounded">
                   Notaire: {task.notaire}
