@@ -32,7 +32,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">📋 NotaList</h1>
