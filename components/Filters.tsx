@@ -109,7 +109,7 @@ export default function Filters({
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Nouvelle tâche
+            Nouveau dossier
           </button>
         </div>
 
@@ -125,7 +125,7 @@ export default function Filters({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Titre de tâche..."
+              placeholder="Chercher des dossiers..."
               className="w-full pl-9 pr-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
             />
             <svg
@@ -164,7 +164,7 @@ export default function Filters({
           </select>
         </div>
 
-        {/* Client Filter */}
+		{/* Client Filter */}
         <div>
           <label htmlFor="client" className="block text-xs font-medium text-gray-900 mb-1.5">
             Client
@@ -299,9 +299,9 @@ export default function Filters({
       )}
       </div>
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Créer une tâche">
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Créer un dossier">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+			<div>
 	  		<label htmlFor="type" className="block text-sm font-medium text-gray-900 mb-2">
               Type
             </label>
@@ -309,7 +309,7 @@ export default function Filters({
 				id="type"
 				value={type}
 				onChange={(e) => setType(e.target.value)}
-              className="w-full px-3 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+				className="w-full px-3 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
 			>
 				<option value="">Sélectionner un type</option>
 				{types.map((t) => (
@@ -321,7 +321,7 @@ export default function Filters({
 			</div>
 		  <div>
 
-          </div>
+		  </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>

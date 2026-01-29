@@ -36,7 +36,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">📋 NotaList</h1>
-          <p className="text-gray-700">Gestion de tâches pour notaires</p>
+          <p className="text-gray-700">Gestion de dossiers pour notaires</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">

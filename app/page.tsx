@@ -75,7 +75,7 @@ export default function Home() {
 			const matchesClient = task.client_name?.toLowerCase().includes(query)
 
 			if (!matchesType && !matchesClient) {
-				return false
+			return false
 			}
 		}
 
@@ -163,7 +163,7 @@ export default function Home() {
 					<div className="flex items-center justify-between mb-6 border-b border-gray-200">
 						<div>
 							<h1 className="text-3xl font-bold text-gray-900">NotaList</h1>
-							<p className="text-sm text-gray-600 mt-1">Gestion de tâches</p>
+							<p className="text-sm text-gray-600 mt-1">Gestion de dossiers</p>
 						</div>
 						<button
 							onClick={handleLogout}
@@ -222,7 +222,7 @@ export default function Home() {
 									<TaskCard key={task.id} task={task} onTaskUpdated={loadTasks} />
 								))}
 								{inProgressTasks.length === 0 && (
-									<div className="text-center py-12 text-gray-400 text-sm">Aucune tâche</div>
+									<div className="text-center py-12 text-gray-400 text-sm">Aucun dossier</div>
 								)}
 							</div>
 						</div>
@@ -245,7 +245,7 @@ export default function Home() {
 									<TaskCard key={task.id} task={task} onTaskUpdated={loadTasks} />
 								))}
 								{doneTasks.length === 0 && (
-									<div className="text-center py-12 text-gray-400 text-sm">Aucune tâche</div>
+									<div className="text-center py-12 text-gray-400 text-sm">Aucun dossier</div>
 								)}
 							</div>
 						</div>

@@ -66,7 +66,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
   }
 
   const handleDelete = async () => {
-    if (confirm('Supprimer cette tâche ?')) {
+    if (confirm('Supprimer ce dossier ?')) {
       try {
         await deleteTask(task.id)
         if (onTaskUpdated) {
@@ -104,7 +104,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
 
   if (isEditing) {
     return (
-      <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+      <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm">      
         <div className="grid grid-cols-2 gap-2 mb-3">
           <input
             type="text"
@@ -120,7 +120,7 @@ export default function TaskCard({ task, onTaskUpdated }: TaskCardProps) {
             placeholder="Notaire"
             className="px-3 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 focus:border-indigo-500 outline-none"
           />
-        </div>
+		</div>
 		<div>
           <select
             value={type}

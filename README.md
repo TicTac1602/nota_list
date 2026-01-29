@@ -1,10 +1,10 @@
 # NotaList 📋
 
-Application de gestion de tâches orientée notaires avec interface Kanban moderne.
+Application de gestion de dossiers orientée notaires avec interface Kanban moderne.
 
 ## 🎯 Fonctionnalités
 
-- ✅ **Ajout rapide de tâches** : Modal intuitive pour créer des tâches
+- ✅ **Ajout rapide de dossiers** : Modal intuitive pour créer des dossiers
 - 🎨 **Priorisation visuelle** : 4 niveaux de priorité (Basse, Moyenne, Haute, Urgent)
 - 📊 **Kanban Board** : Colonnes À faire / En cours / Terminée avec drag & drop
 - 🔍 **Filtres avancés** : Recherche par titre, filtres par priorité et client
@@ -108,8 +108,8 @@ nota_list/
 │   ├── signup/page.tsx       # Page d'inscription
 │   └── auth/callback/        # Callback OAuth
 ├── components/
-│   ├── Filters.tsx           # Barre de filtres + ajout de tâche
-│   ├── TaskCard.tsx          # Carte de tâche avec drag & drop
+│   ├── Filters.tsx           # Barre de filtres + ajout de dossier
+│   ├── TaskCard.tsx          # Carte de dossier avec drag & drop
 │   └── Modal.tsx             # Modal réutilisable
 ├── lib/
 │   ├── actions/
@@ -125,14 +125,14 @@ nota_list/
 
 ## 🎨 Utilisation
 
-### Créer une tâche
-1. Cliquez sur le bouton "Nouvelle tâche"
+### Créer une dossier
+1. Cliquez sur le bouton "Nouvelle dossier"
 2. Remplissez le titre (obligatoire)
 3. Ajoutez optionnellement client, n° dossier
 4. Sélectionnez une priorité
 5. Créez !
 
-### Déplacer une tâche
+### Déplacer une dossier
 **Méthode 1 - Drag & Drop :**
 - Glissez la carte d'une colonne à l'autre
 - Un indicateur visuel apparaît sur la zone de drop
@@ -141,12 +141,12 @@ nota_list/
 - Cliquez sur "Déplacer vers..."
 - Sélectionnez la colonne de destination
 
-### Éditer une tâche
+### Éditer une dossier
 1. Cliquez sur l'icône ✏️ (visible au survol)
 2. Modifiez les champs
 3. Sauvegardez ou annulez
 
-### Filtrer les tâches
+### Filtrer les dossiers
 - **Recherche** : Titre, client ou n° dossier
 - **Priorité** : Filtrer par niveau de priorité
 - **Client** : Filtrer par nom de client
@@ -187,4 +187,4 @@ MIT
 
 ---
 
-Développé avec ❤️ pour optimiser la gestion de tâches notariales
+Développé avec ❤️ pour optimiser la gestion de dossiers notariales
