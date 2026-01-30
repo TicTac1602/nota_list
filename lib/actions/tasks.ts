@@ -33,6 +33,13 @@ export async function createTask(formData: {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
+  const { data: userTeam } = await supabase
+	.from('team_members')
+	.select('team_id')
+	.eq('user_id', user?.id)
+	.single()
+  if (!userTeam) throw new Error('User has no team');  
+
   // Get the max order_index to append new task at the end
   const { data: existingTasks } = await supabase
     .from('tasks')
@@ -46,6 +53,7 @@ export async function createTask(formData: {
     .from('tasks')
     .insert({
       user_id: user.id,
+	  team_id: userTeam.team_id,
       priority: formData.priority,
       status: formData.status || 'in_progress',
       client_name: formData.client_name,
